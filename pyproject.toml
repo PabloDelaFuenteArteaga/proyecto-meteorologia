@@ -4,7 +4,7 @@ version = "0.0.1"
 description = "Análisis de datos meteorológicos — Big Data"
 readme = "README.md"
 requires-python = ">=3.10"
-authors = [{ name = "Your Name" }]
+authors = [{ name = "Pablo De la Fuente Arteaga" }]
 
 dependencies = [
     "pandas>=2.0",
