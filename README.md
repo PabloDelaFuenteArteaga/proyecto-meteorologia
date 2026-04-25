@@ -39,7 +39,7 @@ Data is not included in the repository. To download:
 
   ```bash
   uv run pytest                          # run tests
-  uv run pytest --cov=src -v     # tests with coverage
+  uv run pytest --cov=src -v             # tests with coverage
   uv run ruff check .                    # lint
   uv run ruff format .                   # format
   uv run mkdocs serve                    # preview docs at localhost:8000
