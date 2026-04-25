@@ -1,4 +1,5 @@
 import meteostat as ms
+import pandas as pd
 
 
 def estaciones_iberia(punto_partida):
@@ -36,3 +37,34 @@ def estaciones_iberia(punto_partida):
     return estaciones_ib
 
 
+def obtencion_ids(estaciones):
+    """
+    Extrae los identificadores de estaciones de un DataFrame.
+
+    Args:
+        estaciones (pandas.DataFrame): DataFrame con columna 'id'.
+
+    Returns:
+        list: Lista de identificadores de estaciones.
+
+    Examples:
+        >>> import pandas as pd
+        >>> df = pd.DataFrame({"id": ["A", "B", "C"]})
+        >>> obtencion_ids(df)
+        ['A', 'B', 'C']
+    """
+    return estaciones["id"].tolist()
+
+# Para obtener datos de más de 3 años
+ms.config.block_large_requests = False
+
+
+def datos_diarios_estacion(ids, inicio, fin):
+    dfs = []
+
+    for id in ids:
+        df = ms.daily(ms.Station(id=id), inicio, fin).fetch()
+        df["station_id"] = id
+        dfs.append(df)
+
+    return pd.concat(dfs)
