@@ -27,10 +27,12 @@ def estaciones_iberia(punto_partida):
     estaciones = ms.stations.nearby(punto_partida,
                                     radius=50000000, limit=200000).reset_index()
     # Filtramos a las estaciones ibéricas
-    estaciones_ib = estaciones[((estaciones["country"] == "ES") | (estaciones["country"] == "PT")) #
+    estaciones_ib = estaciones[((estaciones["country"] == "ES") | (estaciones["country"] == "PT")) # España y Portugal
                                 & (estaciones["region"] != "CN") # Sin Canarias
                                 & (estaciones["region"] != "CE") # Sin Ceuta
                                 & (estaciones["region"] != "ML") # Sin Melilla
                                 & (estaciones["region"].notna())]
 
     return estaciones_ib
+
+
