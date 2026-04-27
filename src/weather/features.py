@@ -1,3 +1,4 @@
+import pandas as pd
 import polars as pl
 
 
@@ -30,12 +31,40 @@ def caracteristicas_climaticas(df: "pl.DataFrame") -> "pl.DataFrame":
         >>> caracteristicas.shape[0]  # número de estaciones
     """
 
-    caracteristicas = df.group_by("station_id").agg([
-        pl.col("tavg").mean().alias("temp_media"),
-        pl.col("tavg").std().alias("temp_std"),
+    # Convertir a Polars si viene de Pandas
+    if isinstance(df, pd.DataFrame):
+        df = df.reset_index()  # Resetear índice
+        df = pl.from_pandas(df)
+
+    # Renombrar si es necesario
+    if "time" in df.columns and "date" not in df.columns:
+        df = df.rename({"time": "date"})
+
+    df = df.with_columns(
+        pl.col("date").dt.month().alias("mes")
+    )
+
+    base = df.group_by("station_id").agg([
+        pl.col("temp").mean().alias("temp_media"),
+        pl.col("temp").std().alias("temp_std"),
         pl.col("prcp").mean().alias("precip_media"),
         pl.col("prcp").quantile(0.9).alias("precip_p90"),
-        (pl.col("tavg").max() - pl.col("tavg").min()).alias("amplitud_termica"),
+        (pl.col("tmax").max() - pl.col("tmin").min()).alias("amplitud_termica"),
     ])
+
+    # Estacionalidad
+    mensual = (
+        df.group_by(["station_id", "mes"])
+        .agg(pl.col("temp").mean().alias("temp_media_mes"))
+    )
+
+    mensual_pivot = mensual.pivot(
+        values="temp_media_mes",
+        index="station_id",
+        columns="mes"
+    )
+
+    # Unir todo
+    caracteristicas = base.join(mensual_pivot, on="station_id", how="left")
 
     return caracteristicas

@@ -1,74 +1,31 @@
-import numpy as np
-import sklearn.cluster
+import sklearn
 
 
-def clustering_k_means(X: np.ndarray, k: int):
-    """
-    Aplica clustering K-Means a un conjunto de datos.
+def clustering_kmeans(X, nombres_estaciones, k=None):
+    # Si k es None, lo pedimos (para uso manual).
+    # Si k ya viene (estabilidad), no preguntamos.
+    if k is None:
+        k = int(input("¿Cuántos clusters para K-Means?: "))
 
-    El algoritmo K-Means divide los datos en k clusters
-    minimizando la varianza intra-cluster.
-
-    Args:
-        X (np.ndarray): Matriz de características (n_samples, n_features).
-        k (int): Número de clusters a generar.
-
-    Returns:
-        labels (np.ndarray): Etiquetas de cluster para cada muestra.
-        centroids (np.ndarray): Coordenadas de los centroides de los clusters.
-    """
-    model = sklearn.cluster.KMeans(
-        n_clusters=k,
-        random_state=42,
-        n_init=10)
-
+    model = sklearn.cluster.KMeans(n_clusters=k, random_state=42, n_init=10)
     labels = model.fit_predict(X)
+    return {"labels": labels, "metodo": "K-Means", "parametros": {"k": k}}
 
-    centroids = model.cluster_centers_
+def clustering_dbscan(X, nombres_estaciones, eps=None, min_samples=None):
+    if eps is None or min_samples is None:
+        eps = float(input("eps (radio): "))
+        min_samples = int(input("min_samples: "))
 
-    return labels, centroids
-
-def clustering_dbscan(X: np.ndarray, eps: float, min_samples: int = 2, metric: str = "euclidean"):
-    """
-    Aplica DBSCAN clustering.
-
-    Args:
-        X (np.ndarray): Matriz de features
-        eps (float): Radio de vecindad
-        min_samples (int): Puntos mínimos por cluster
-        metric (str): Métrica usada
-
-    Returns:
-        labels (np.ndarray): Etiquetas de cluster para cada muestra.
-    """
-    model = sklearn.cluster.DBSCAN(
-        eps=eps,
-        min_samples=min_samples,
-        metric=metric)
-
+    model = sklearn.cluster.DBSCAN(eps=eps, min_samples=min_samples)
     labels = model.fit_predict(X)
+    return {"labels": labels, "metodo": "DBSCAN", "parametros": {"eps": eps, "min_samples": min_samples}}
 
-    return labels
+def clustering_jerarquico(X, nombres_estaciones, n_clusters=None, linkage=None):
+    if n_clusters is None:
+        n_clusters = int(input("¿Cuántos clusters? "))
+        linkage_opcion = input("Método (1:ward, 2:complete, 3:average): ") or "1"
+        linkage = {"1": "ward", "2": "complete", "3": "average"}.get(linkage_opcion, "ward")
 
-def clustering_jerarquico(X: np.ndarray, n_clusters: int = 4, linkage: str = "ward"):
-    """
-    Aplica clustering jerárquico aglomerativo.
-
-    El clustering jerárquico construye una estructura en forma de árbol
-    fusionando iterativamente los clusters más similares.
-
-    Args:
-        X (np.ndarray): Matriz de características (n_samples, n_features).
-        n_clusters (int): Número de clusters finales a generar.
-        linkage (str): Método de enlace ('ward', 'complete', 'average').
-
-    Returns:
-        labels (np.ndarray): Etiquetas de cluster para cada muestra.
-    """
-    model = sklearn.cluster.AgglomerativeClustering(
-        n_clusters=n_clusters,
-        linkage=linkage)
-
+    model = sklearn.cluster.AgglomerativeClustering(n_clusters=n_clusters, linkage=linkage)
     labels = model.fit_predict(X)
-
-    return labels
+    return {"labels": labels, "metodo": "Jerárquico", "parametros": {"n_clusters": n_clusters, "linkage": linkage}}
