@@ -99,7 +99,7 @@ def limpiar_datos_meteorologicos(datos):
     )
 
     # Convertir a float64 SOLO las columnas numéricas (excluyendo station_id)
-    columnas_numericas = datos.select_dtypes(include=['number']).columns
+    columnas_numericas = datos.select_dtypes(include=["number"]).columns
     datos[columnas_numericas] = datos[columnas_numericas].astype("float64")
 
     # Rellenar NAs residuales

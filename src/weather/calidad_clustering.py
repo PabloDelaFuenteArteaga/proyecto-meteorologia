@@ -11,12 +11,14 @@ def obtener_silhouette(X, labels):
 
     return silhouette_score(X[mask], labels[mask])
 
+
 def obtener_davies_bouldin(X, labels):
     mask = labels != -1
     if len(np.unique(labels[mask])) < 2:
-        return float('inf')
+        return float("inf")
 
     return davies_bouldin_score(X[mask], labels[mask])
+
 
 def obtener_estabilidad(X, func_clustering, nombres, params, n_iter=3):
     indices = np.arange(len(X))
@@ -28,7 +30,9 @@ def obtener_estabilidad(X, func_clustering, nombres, params, n_iter=3):
 
     for i in range(n_iter):
         # Tomamos el 80% de los datos al azar
-        idx_sub = resample(indices, n_samples=int(len(X)*0.8), random_state=i, replace=False)
+        idx_sub = resample(
+            indices, n_samples=int(len(X) * 0.8), random_state=i, replace=False
+        )
         res_sub = func_clustering(X[idx_sub], nombres, **params)
 
         # Comparamos estabilidad con ARI
