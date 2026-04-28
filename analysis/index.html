@@ -489,19 +489,24 @@
 <h1 id="analisis-de-datos-y-clustering">Análisis de Datos y Clustering<a class="headerlink" href="#analisis-de-datos-y-clustering" title="Permanent link">&para;</a></h1>
 <h2 id="data-loading-cleaning">Data Loading &amp; Cleaning<a class="headerlink" href="#data-loading-cleaning" title="Permanent link">&para;</a></h2>
 <ul>
-<li>(Pendiente de completar)</li>
+<li>
+<p>Para cargar los datos se ha usado la propia librería Meteostat. Para ello se selecciona un punto concreto con la función <code>ms.Point()</code> y acto seguido se generan una gran cantidad de estaciones cercanas con la función <code>ms.stations.nerby()</code> usando los parámetros de <code>radius</code> y <code>limit</code>. Una vez obtenidas las estaciones filtramos por las estaciones de España y Portugal exceptuando Canarias y las ciudades autónomas de Ceuta y Melilla. Todo este proceso se ha realizado en una misma función llamada <code>estaciones_iberia()</code>.</p>
+</li>
+<li>
+<p>Para realizar la limpieza de los datos meteorológicos se ha creado una función llamada <code>limpiar_datos_meteorologicos()</code> en la cual se han eliminado 3 columnas con un porcentaje demasido alto de datos faltantes y se han imputado NAs en las variables que contaban con una cantidad moderada de ellos.</p>
+</li>
 </ul>
 <h2 id="exploratory-analysis">Exploratory Analysis<a class="headerlink" href="#exploratory-analysis" title="Permanent link">&para;</a></h2>
 <ul>
-<li>(Pendiente de completar)</li>
+<li>Se han calculado distintas métricas para todas las estaciones, función <code>caracteristicas_climaticas()</code>, entre ellas la temperatura media de cada estación, la temperatura media de cada uno de los meses (del 1 al 12) de cada estación, la desviación estándar de la temperatura y la precipitación media.</li>
 </ul>
 <h2 id="results">Results<a class="headerlink" href="#results" title="Permanent link">&para;</a></h2>
 <ul>
-<li>(Pendiente de completar)</li>
+<li>Dependiendo de los parámetros elegidos en cada uno de los modelos de clustering (KMeans, DBScan y Jerárquico) se han obtenido diferentes resultados. Para poder visualizarlos debemos analizar la tabla donde comparamos basándonos en las métricas <strong>Silhoutte Score</strong>, <strong>Davies-Bouldin</strong> y <strong>Estabilidad</strong>. Asimismo, es posible analizar la asignación de clusters realizada por cada modelo para cada estación meteorológica.</li>
 </ul>
 <h2 id="conclusions">Conclusions<a class="headerlink" href="#conclusions" title="Permanent link">&para;</a></h2>
 <ul>
-<li>(Pendiente de completar)</li>
+<li>El estudio demuestra que la combinación de métricas estadísticas y estacionales permite crear zonas clímaticas en la península Ibérica de forma automatizada y precisa.</li>
 </ul>
 
 
