@@ -55,6 +55,8 @@ Data is not included in the repository. To download:
   ├── notebooks/           # Exploratory notebooks
   ├── src/weather/         # Source package
   ├── tests/               # Unit and integration tests
+  ├── main.py              # Main function
+  ├── mapa_estaciones.png  # Image showing Iberian stations
   ├── mkdocs.yml
   ├── pyproject.toml
   └── README.md

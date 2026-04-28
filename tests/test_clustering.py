@@ -2,7 +2,7 @@ from unittest.mock import patch
 
 import numpy as np
 
-from weather import clustering
+from src.weather import clustering
 
 
 class TestClustering:

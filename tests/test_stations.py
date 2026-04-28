@@ -1,6 +1,6 @@
 import pandas as pd
 
-import weather.stations as stations
+import src.weather.stations as stations
 
 
 class TestStations:

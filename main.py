@@ -1,8 +1,15 @@
 from datetime import datetime
 
+import meteostat as ms
+import pandas as pd
 import polars as pl
 
-from weather import calidad_clustering, clustering, features, stations, utils
+import src.weather.calidad_clustering as calidad_clustering
+import src.weather.clustering as clustering
+import src.weather.features as features
+import src.weather.stations as stations
+import src.weather.utils as utils
+import src.weather.visualization as visualization
 
 df_ib = stations.estaciones_iberia()
 
@@ -10,17 +17,15 @@ utils.mapa(df_ib)
 
 ids = stations.obtencion_ids(stations.estaciones_iberia())
 
+# Para obtener datos de más de 3 años
+ms.config.block_large_requests = False
+
 datos = stations.datos_diarios_estacion(
     ids, datetime(2010, 1, 1), datetime(2023, 12, 31)
 )
 
 # Limpiar datos
 datos = stations.limpiar_datos_meteorologicos(datos)
-
-"""
-print(datos.head(40))
-print(f"\nNAs restantes:\n{datos.isnull().sum()}")
-"""
 
 datos = datos.reset_index()
 
@@ -56,6 +61,27 @@ X = caracteristicas_pd.drop(columns=["station_id"]).values
 
 print(f"Matriz de características: {X.shape}")
 print(f"Número de estaciones: {len(ids)}")
+
+
+print("\n-----------VISUALIZACIÓN DE UNA ESTACIÓN-----------")
+id_elegido = input(
+    f"Los ids disponibles son: \n {ids_limpios} \n\nEliga uno por favor: "
+)
+
+visualization.visualizacion_estacion(id_elegido, datos)
+
+
+datos_id = datos[datos["station_id"] == id_elegido]
+
+# Llamamos a la función
+caracteristicas_una = features.caracteristicas_climaticas(datos_id)
+
+print(f"\n-----------MÉTRICAS DE LA ESTACIÓN - {id_elegido}-----------")
+print(caracteristicas_una)
+for columna in caracteristicas_una.columns:
+    print(f"{columna}: {caracteristicas_una[columna][0]}")
+print()
+
 
 comparativa = []
 
@@ -106,6 +132,22 @@ comparativa.append(
         "Estabilidad": est_jer,
     }
 )
+
+# --- RESUMEN DE ASIGNACIÓN DE CLUSTERS ---
+print("\n" + "=" * 70)
+print("COMPOSICIÓN DE LOS CLUSTERS POR MÉTODO")
+print("=" * 70)
+
+df_clusters = pd.DataFrame(
+    {
+        "station_id": ids_limpios,
+        "K-Means": res_km["labels"],
+        "DBSCAN": res_db["labels"],
+        "Jerárquico": res_jer["labels"],
+    }
+)
+
+print(df_clusters)
 
 # --- TABLA FINAL ---
 print("\n" + "=" * 70)

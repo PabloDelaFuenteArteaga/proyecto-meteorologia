@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import meteostat as ms
 import pandas as pd
 
 
@@ -10,6 +11,8 @@ def visualizacion_estacion(id, datos):
         id (str): Identificador de la estación.
         datos (pd.DataFrame): DataFrame con datos meteorológicos.
     """
+    # Para obtener datos de más de 3 años
+    ms.config.block_large_requests = False
 
     # Filtrar por estación
     datos_estacion = datos[datos["station_id"] == id].copy()
@@ -34,7 +37,7 @@ def visualizacion_estacion(id, datos):
     axes[0].fill_between(
         datos_estacion.index, datos_estacion["tmax"], datos_estacion["tmin"], alpha=0.3
     )
-    axes[0].set_title(f"Temperatura - Estación {id}", fontweight="bold")
+    axes[0].set_title(f"Temperatura - Id {id}", fontweight="bold")
     axes[0].set_ylabel("°C")
     axes[0].grid(True, alpha=0.3)
     axes[0].legend()

@@ -3,7 +3,7 @@ from datetime import datetime
 import pandas as pd
 import polars as pl
 
-from weather.features import caracteristicas_climaticas
+from src.weather.features import caracteristicas_climaticas
 
 
 class TestFeatures:

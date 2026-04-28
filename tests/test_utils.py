@@ -1,4 +1,4 @@
-from weather.utils import puntos_latitud_longitud
+from src.weather.utils import puntos_latitud_longitud
 
 
 class TestUtils:
